@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using VisionCareCore.OpenAI.Domain.Services;
 using VisionCareCore.OpenAI.Interfaces.REST.Resources;
@@ -6,6 +7,7 @@ using VisionCareCore.OpenAI.Interfaces.REST.Resources;
 namespace VisionCareCore.OpenAI.Interfaces.REST.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("vc/v1/gpt")]
     [Produces(MediaTypeNames.Application.Json)]

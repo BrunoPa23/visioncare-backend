@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VisionCareCore.HealthCare.Domain.Services;
 using VisionCareCore.HealthCare.Interfaces.Resources;
@@ -5,6 +6,7 @@ using VisionCareCore.HealthCare.Interfaces.Transform;
 
 namespace VisionCareCore.HealthCare.Interfaces.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/medicine-time")]
 public class MedicineTimeController : ControllerBase

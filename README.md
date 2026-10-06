@@ -58,6 +58,8 @@ VisionCareCore/
 | GET | /api/medicine-time/{id} | Horario por id |
 | DELETE | /api/medicine-time/{id} | Elimina un horario |
 
+Todos los endpoints requieren un JWT valido, enviado en el header `Authorization: Bearer <token>` o en la cookie `AuthToken`, excepto `sign-up`, `sign-in` y `refresh-token`. Sin token la API responde 401.
+
 La documentacion interactiva esta disponible en Swagger al ejecutar la API.
 
 ## Stack

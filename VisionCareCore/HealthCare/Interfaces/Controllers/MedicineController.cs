@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VisionCareCore.HealthCare.Application.Internal.CommandServices;
 using VisionCareCore.HealthCare.Application.Internal.QueryServices;
@@ -9,6 +10,7 @@ using VisionCareCore.HealthCare.Interfaces.Transform;
 
 namespace VisionCareCore.HealthCare.Interfaces.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MedicineController : ControllerBase

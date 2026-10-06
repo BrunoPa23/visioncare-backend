@@ -10,6 +10,7 @@ using VisionCareCore.User.Interfaces.REST.Transform;
 
 namespace VisionCareCore.User.Interfaces.REST.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("vc/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
