@@ -1,0 +1,6 @@
+@VisionCareCore_HostAddress = http://localhost:5291
+
+GET {{VisionCareCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
