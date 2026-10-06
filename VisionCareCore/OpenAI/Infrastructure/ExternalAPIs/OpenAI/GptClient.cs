@@ -1,4 +1,4 @@
-﻿using OpenAI;
+using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Threads;
 using System.Text.Json;
@@ -16,10 +16,6 @@ namespace VisionCareCore.OpenAI.Infrastructure.ExternalAPIs.OpenAI
         {
             _api = new OpenAIClient(Environment.GetEnvironmentVariable("APPSETTING_OpenAI_Key"));
             _assistantId = Environment.GetEnvironmentVariable("APPSETTING_Assistant_Key");
-
-            //Print the keys to the console for debugging purposes (remove in production)
-            Console.WriteLine($"OpenAI_Key: {_api}");
-            Console.WriteLine($"Assistant_Key: {_assistantId}");
         }
 
         public async Task<GptResponse> SendRequestAsync(GptRequest request)
