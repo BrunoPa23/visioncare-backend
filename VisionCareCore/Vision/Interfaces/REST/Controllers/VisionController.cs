@@ -1,10 +1,12 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using VisionCareCore.Vision.Domain.Services;
 
 namespace VisionCareCore.Vision.Interfaces.REST.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("vc/v1/vision")]
     [Produces(MediaTypeNames.Application.Json)]
