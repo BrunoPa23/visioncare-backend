@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mime;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -49,12 +49,6 @@ public class AuthUserController(IAuthUserQueryService authUserQueryService, IAut
     [HttpGet("me")]
     public async Task<IActionResult> GetAuthenticatedUser()
     {
-        Console.WriteLine("🔹 Cookies Recibidas:");
-        foreach (var cookie in HttpContext.Request.Cookies)
-        {
-            Console.WriteLine($"🔹 {cookie.Key}: {cookie.Value}");
-        }
-
         if (!HttpContext.User.Identity.IsAuthenticated)
         {
             Console.WriteLine("❌ Usuario no autenticado.");
