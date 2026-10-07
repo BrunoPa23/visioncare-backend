@@ -19,4 +19,9 @@ public class MedicineQueryService : IMedicineQueryService
         return await _medicineRepository.GetAllByUserIdAsync(query.UserId);
 
     }
+
+    public async Task<Medicine?> Handle(GetMedicineByIdQuery query)
+    {
+        return await _medicineRepository.GetByIdAsync(query.MedicineId);
+    }
 }

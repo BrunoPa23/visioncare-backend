@@ -43,6 +43,12 @@ namespace VisionCareCore.HealthCare.Interfaces.Controllers
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetByUserId(Guid userId)
         {
+            var currentUserId = User.GetUserId();
+            if (currentUserId is null) return Unauthorized();
+
+            // Un usuario solo puede consultar sus propios medicamentos
+            if (userId != currentUserId) return Forbid();
+
             var query = new GetAllMedicinesByUserIdQuery(userId);
             var medicines = await _medicineQueryService.Handle(query);
             return Ok(medicines);
@@ -51,6 +57,13 @@ namespace VisionCareCore.HealthCare.Interfaces.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var currentUserId = User.GetUserId();
+            if (currentUserId is null) return Unauthorized();
+
+            // Se responde 404 tambien si es de otro usuario, para no revelar que existe
+            var medicine = await _medicineQueryService.Handle(new GetMedicineByIdQuery(id));
+            if (medicine is null || medicine.UserId != currentUserId) return NotFound();
+
             var command = new DeleteMedicineCommand(id);
             await _medicineCommandService.Handle(command);
             return NoContent();

@@ -6,4 +6,5 @@ namespace VisionCareCore.HealthCare.Domain.Services;
 public interface IMedicineQueryService
 {
     Task<IEnumerable<Medicine>> Handle(GetAllMedicinesByUserIdQuery query);
+    Task<Medicine?> Handle(GetMedicineByIdQuery query);
 }
