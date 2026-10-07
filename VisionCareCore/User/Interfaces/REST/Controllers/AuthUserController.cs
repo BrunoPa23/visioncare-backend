@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Model.Queries;
 using VisionCareCore.User.Domain.Services;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
 using VisionCareCore.User.Interfaces.REST.Transform;
 
 namespace VisionCareCore.User.Interfaces.REST.Controllers;
@@ -26,26 +27,19 @@ public class AuthUserController(IAuthUserQueryService authUserQueryService, IAut
     [HttpGet("{authUserId}")]
     public async Task<IActionResult> GetAuthUserById(Guid authUserId)
     {
+        var currentUserId = User.GetUserId();
+        if (currentUserId is null) return Unauthorized();
+
+        // Un usuario solo puede consultar sus propios datos
+        if (authUserId != currentUserId) return Forbid();
+
         var getAuthUserByIdQuery = new GetAuthUserByIdQuery(authUserId);
         var user = await authUserQueryService.Handle(getAuthUserByIdQuery);
-        var userResource = AuthUserResourceFromEntityAssembler.ToResourceFromEntity(user!);
+        if (user is null) return NotFound();
+        var userResource = AuthUserResourceFromEntityAssembler.ToResourceFromEntity(user);
         return Ok(userResource);
     }
 
-    /**
-     * <summary>
-     *     Get all users endpoint. It allows to get all users
-     * </summary>
-     * <returns>The user resources</returns>
-     */
-    [HttpGet]
-    public async Task<IActionResult> GetAuthAllUsers()
-    {
-        var getAuthAllUsersQuery = new GetAllAuthUsersQuery();
-        var users = await authUserQueryService.Handle(getAuthAllUsersQuery);
-        var userResources = users.Select(AuthUserResourceFromEntityAssembler.ToResourceFromEntity);
-        return Ok(userResources);
-    }
     
     [HttpGet("me")]
     public async Task<IActionResult> GetAuthenticatedUser()

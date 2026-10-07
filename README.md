@@ -43,8 +43,7 @@ VisionCareCore/
 | POST | /vc/v1/authentication/refresh-token | Renueva el token |
 | POST | /vc/v1/authentication/sign-out | Cierra la sesion |
 | GET | /vc/v1/auth-user/me | Usuario autenticado |
-| GET | /vc/v1/auth-user | Lista de usuarios |
-| GET | /vc/v1/auth-user/{authUserId} | Usuario por id |
+| GET | /vc/v1/auth-user/{authUserId} | Datos del propio usuario por id |
 | POST | /vc/v1/vision/recognize-image | OCR de la foto de un medicamento |
 | POST | /vc/v1/vision/scan | Escaneo de medicamento (OCR e interpretacion) |
 | POST | /vc/v1/gpt/test | Procesa texto con el asistente de OpenAI |
