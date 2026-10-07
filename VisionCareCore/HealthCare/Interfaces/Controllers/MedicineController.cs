@@ -7,6 +7,7 @@ using VisionCareCore.HealthCare.Domain.Queries;
 using VisionCareCore.HealthCare.Domain.Services;
 using VisionCareCore.HealthCare.Interfaces.Resources;
 using VisionCareCore.HealthCare.Interfaces.Transform;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
 
 namespace VisionCareCore.HealthCare.Interfaces.Controllers
 {
@@ -30,7 +31,10 @@ namespace VisionCareCore.HealthCare.Interfaces.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateMedicineResource resource)
         {
-            var command = CreateMedicineTransform.ToCommand(resource);
+            var userId = User.GetUserId();
+            if (userId is null) return Unauthorized();
+
+            var command = CreateMedicineTransform.ToCommand(resource, userId.Value);
             var id = await _medicineCommandService.Handle(command);
             return Ok(new { id });
         }

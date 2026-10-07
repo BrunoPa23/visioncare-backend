@@ -5,14 +5,14 @@ namespace VisionCareCore.HealthCare.Interfaces.Transform;
 
 public static class CreateMedicineTransform
 {
-    public static CreateMedicineCommand ToCommand(CreateMedicineResource resource)
+    public static CreateMedicineCommand ToCommand(CreateMedicineResource resource, Guid userId)
     {
         return new CreateMedicineCommand(
             resource.Nombre,
             resource.Description,
             resource.SideEffects,
             resource.Warnings,
-            resource.UserId,
+            userId,
             resource.Instruccions,
             resource.ExpirationDate
             );
