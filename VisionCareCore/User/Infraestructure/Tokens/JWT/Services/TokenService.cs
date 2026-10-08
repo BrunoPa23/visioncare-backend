@@ -39,25 +39,20 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
             var secret = _tokenSettings.Secret;
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
 
-            var refreshToken = GenerateRefreshToken(); 
-
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // ✅ Reemplaza ClaimTypes.Sid por sub
                     new Claim(ClaimTypes.Name, user.Email),
-                    new Claim("visualImpairment", user.VisualImpairment.ToString()),
-                    new Claim("refreshToken", refreshToken) 
+                    new Claim("visualImpairment", user.VisualImpairment.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(30), 
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-    
-            StoreRefreshToken(user.Id, refreshToken).Wait();
 
             return tokenHandler.WriteToken(token);
         }

@@ -3,7 +3,8 @@
 public interface ITokenService
 {
     /// <summary>
-    /// Generate a JWT access token
+    /// Generate a JWT access token. It does not create or store a refresh token;
+    /// callers use GenerateRefreshToken and StoreRefreshToken for that.
     /// </summary>
     /// <param name="user">The user to generate the token for</param>
     /// <returns>The generated access token</returns>
