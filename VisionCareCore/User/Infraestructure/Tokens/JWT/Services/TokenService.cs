@@ -47,6 +47,8 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim("visualImpairment", user.VisualImpairment.ToString())
                 }),
+                Issuer = _tokenSettings.Issuer,
+                Audience = _tokenSettings.Audience,
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
@@ -76,8 +78,10 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = _tokenSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = _tokenSettings.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };

@@ -91,7 +91,7 @@ dotnet user-secrets set "TokenSettings:Secret" "<clave de al menos 32 caracteres
 | APPSETTING_OpenAI_Key | Clave de la API de OpenAI |
 | APPSETTING_Assistant_Key | Id del asistente de OpenAI |
 
-3. Ajusta los origenes permitidos de CORS en `appsettings.json` (seccion `Cors:OrigenesPermitidos`).
+3. Ajusta los origenes permitidos de CORS en `appsettings.json` (seccion `Cors:OrigenesPermitidos`). En el mismo archivo, `TokenSettings:Issuer` y `TokenSettings:Audience` definen el emisor y la audiencia que la API firma y exige en cada JWT.
 
 4. Ejecuta la API y abre Swagger en la URL que muestra la consola:
 
