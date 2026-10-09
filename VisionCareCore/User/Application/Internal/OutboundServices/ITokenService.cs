@@ -34,10 +34,9 @@ public interface ITokenService
     /// <summary>
     /// Validate a Refresh Token
     /// </summary>
-    /// <param name="userId">The user ID</param>
-    /// <param name="refreshToken">The refresh token</param>
-    /// <returns>True if valid, otherwise false</returns>
-    Task<Guid?> ValidateRefreshToken(Guid userId, string refreshToken);
+    /// <param name="refreshToken">The refresh token sent by the client</param>
+    /// <returns>The owner's user ID if the token is valid, null otherwise</returns>
+    Task<Guid?> ValidateRefreshToken(string refreshToken);
 
     /// <summary>
     /// Remove a Refresh Token
