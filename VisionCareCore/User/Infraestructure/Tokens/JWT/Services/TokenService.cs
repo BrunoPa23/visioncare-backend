@@ -130,6 +130,12 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                 return null;
             }
 
+            if (storedToken.IsRevoked)
+            {
+                Console.WriteLine($" El refresh token del usuario {storedToken.UserId} fue revocado.");
+                return null;
+            }
+
             if (storedToken.ExpiryDate < DateTime.UtcNow)
             {
                 Console.WriteLine($" El refresh token del usuario {storedToken.UserId} ha expirado.");
@@ -158,6 +164,7 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
             {
                 existingToken.Token = HashRefreshToken(refreshToken);
                 existingToken.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                existingToken.IsRevoked = false;
                 await _refreshTokenRepository.UpdateAsync(existingToken); // Asegurar que se actualiza
             }
             else
