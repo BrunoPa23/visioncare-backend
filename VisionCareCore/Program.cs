@@ -49,10 +49,19 @@ builder.Services.AddAuthentication(options =>
             throw new ArgumentNullException(nameof(secret), "JWT Secret is not configured in appsettings.json.");
         }
 
+        var issuer = builder.Configuration["TokenSettings:Issuer"];
+        var audience = builder.Configuration["TokenSettings:Audience"];
+        if (string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
+        {
+            throw new InvalidOperationException("JWT Issuer and Audience must be configured in TokenSettings.");
+        }
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = audience,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))

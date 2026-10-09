@@ -47,6 +47,8 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim("visualImpairment", user.VisualImpairment.ToString())
                 }),
+                Issuer = _tokenSettings.Issuer,
+                Audience = _tokenSettings.Audience,
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
@@ -76,8 +78,10 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = _tokenSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = _tokenSettings.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
@@ -116,31 +120,37 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
         /// <summary>
         /// Validate Refresh Token
         /// </summary>
-        public async Task<Guid?> ValidateRefreshToken(Guid userId, string refreshToken)
+        public async Task<Guid?> ValidateRefreshToken(string refreshToken)
         {
-            var storedToken = await _refreshTokenRepository.GetByUserIdAsync(userId);
+            var storedToken = await _refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
 
             if (storedToken == null)
             {
-                Console.WriteLine($" No se encontró un refresh token para el usuario {userId}.");
+                Console.WriteLine(" Refresh token no encontrado.");
                 return null;
             }
 
-            if (storedToken.Token != refreshToken)
+            if (storedToken.IsRevoked)
             {
-                Console.WriteLine($" Refresh token inválido para el usuario {userId}.");
+                Console.WriteLine($" El refresh token del usuario {storedToken.UserId} fue revocado.");
                 return null;
             }
 
             if (storedToken.ExpiryDate < DateTime.UtcNow)
             {
-                Console.WriteLine($" El refresh token del usuario {userId} ha expirado.");
+                Console.WriteLine($" El refresh token del usuario {storedToken.UserId} ha expirado.");
                 return null;
             }
 
-            Console.WriteLine($" Refresh token válido para el usuario {userId}.");
             return storedToken.UserId;
         }
+
+        /// <summary>
+        /// Only the SHA-256 hash of a refresh token is stored, so a leaked database
+        /// does not expose tokens that can be used against refresh-token.
+        /// </summary>
+        private static string HashRefreshToken(string refreshToken) =>
+            Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken)));
 
 
         /// <summary>
@@ -152,8 +162,9 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
 
             if (existingToken != null)
             {
-                existingToken.Token = refreshToken;
+                existingToken.Token = HashRefreshToken(refreshToken);
                 existingToken.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                existingToken.IsRevoked = false;
                 await _refreshTokenRepository.UpdateAsync(existingToken); // Asegurar que se actualiza
             }
             else
@@ -162,7 +173,7 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
                 {
                     Id = Guid.NewGuid(),
                     UserId = userId,
-                    Token = refreshToken,
+                    Token = HashRefreshToken(refreshToken),
                     ExpiryDate = DateTime.UtcNow.AddDays(30)
                 };
                 await _refreshTokenRepository.AddAsync(newRefreshToken);
@@ -179,7 +190,7 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
         /// </summary>
         public async Task RevokeRefreshToken(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
+            var existingToken = await _refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
 
             if (existingToken != null)
             {

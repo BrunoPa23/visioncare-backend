@@ -17,7 +17,6 @@ namespace VisionCareCore.User.Interfaces.REST.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 public class AuthenticationController(
     IAuthUserCommandService userCommandService,
-    IAuthUserRefreshTokenRepository authUserRefreshTokenRepository,
     IAuthUserRepository authUserRepository,
     ITokenService tokenService) : ControllerBase
 {
@@ -90,13 +89,13 @@ public class AuthenticationController(
             return Unauthorized(new { message = "No hay refresh token disponible" });
         }
 
-        var storedToken = await authUserRefreshTokenRepository.GetByTokenAsync(refreshToken);
-        if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
+        var userId = await tokenService.ValidateRefreshToken(refreshToken);
+        if (userId == null)
         {
             return Unauthorized(new { message = "Refresh token inválido o expirado" });
         }
 
-        var user = await authUserRepository.FindByIdAsync(storedToken.UserId);
+        var user = await authUserRepository.FindByIdAsync(userId.Value);
         if (user == null)
         {
             return Unauthorized(new { message = "Usuario no encontrado" });
