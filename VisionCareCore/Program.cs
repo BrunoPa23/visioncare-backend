@@ -103,6 +103,10 @@ builder.Services.AddControllers(options =>
         options.Conventions.Add(new KebabCaseRouteNamingConvention());
 });
 
+// Errores no controlados: se registran en el log y el cliente recibe ProblemDetails sin detalles internos
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // Configurar opciones de enrutamiento
 builder.Services.AddRouting(options =>
 {
@@ -231,6 +235,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure Middleware Pipeline
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

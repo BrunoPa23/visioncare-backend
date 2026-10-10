@@ -18,8 +18,7 @@ namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration
      
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-            builder.EnableSensitiveDataLogging();
+            // Logging and sensitive data are configured in Program.cs, only enabled in Development.
             builder.AddCreatedUpdatedInterceptor();
 
             base.OnConfiguring(builder);
