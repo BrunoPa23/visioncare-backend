@@ -59,6 +59,8 @@ VisionCareCore/
 
 Todos los endpoints requieren un JWT valido, enviado en el header `Authorization: Bearer <token>` o en la cookie `AuthToken`, excepto `sign-up`, `sign-in` y `refresh-token`. Sin token la API responde 401.
 
+Los errores no controlados responden 500 con un cuerpo ProblemDetails (`application/problem+json`) que solo incluye un titulo generico y el `traceId`; el detalle de la excepcion queda en el log del servidor.
+
 La documentacion interactiva esta disponible en Swagger al ejecutar la API.
 
 ## Stack

@@ -27,15 +27,8 @@ namespace VisionCareCore.Vision.Interfaces.REST.Controllers
             {
                 return BadRequest(new { message = "Invalid image file." });
             }
-            try
-            {
-                var result = await _visionService.AnalyzeImageAsync(imageRequest);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Failed to recognize image.", error = ex.Message });
-            }
+            var result = await _visionService.AnalyzeImageAsync(imageRequest);
+            return Ok(result);
         }
 
         [HttpPost("scan")]
@@ -45,15 +38,8 @@ namespace VisionCareCore.Vision.Interfaces.REST.Controllers
             {
                 return BadRequest(new { message = "Invalid image file." });
             }
-            try
-            {
-                var result = await _visionService.RecognizeImageAsync(imageRequest);
-                return Ok(new { message = "Image scan successfully.", data = result });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Failed to scan image.", error = ex.Message });
-            }
+            var result = await _visionService.RecognizeImageAsync(imageRequest);
+            return Ok(new { message = "Image scan successfully.", data = result });
         }
     }
 }

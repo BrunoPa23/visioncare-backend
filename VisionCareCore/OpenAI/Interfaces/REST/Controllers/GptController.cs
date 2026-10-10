@@ -30,14 +30,7 @@ namespace VisionCareCore.OpenAI.Interfaces.REST.Controllers
         [HttpGet("test-connection")]
         public IActionResult TestConnection()
         {
-            try
-            {
-                return Ok(new { message = "OpenAI API connection successful." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Failed to connect to OpenAI API.", error = ex.Message });
-            }
+            return Ok(new { message = "OpenAI API connection successful." });
         }
 
     }
