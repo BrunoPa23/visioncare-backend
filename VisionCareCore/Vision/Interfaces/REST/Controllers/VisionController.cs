@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using VisionCareCore.Vision.Domain.Services;
+using VisionCareCore.Vision.Interfaces.REST.Validation;
 
 namespace VisionCareCore.Vision.Interfaces.REST.Controllers
 {
@@ -21,22 +22,28 @@ namespace VisionCareCore.Vision.Interfaces.REST.Controllers
         }
 
         [HttpPost("recognize-image")]
+        [RequestSizeLimit(ImageFileValidator.MaxRequestBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = ImageFileValidator.MaxRequestBytes)]
         public async Task<IActionResult> RecognizeImage(IFormFile imageRequest)
         {
-            if (imageRequest == null || imageRequest.Length == 0)
+            var error = await ImageFileValidator.ValidateAsync(imageRequest);
+            if (error is not null)
             {
-                return BadRequest(new { message = "Invalid image file." });
+                return BadRequest(new { message = error });
             }
             var result = await _visionService.AnalyzeImageAsync(imageRequest);
             return Ok(result);
         }
 
         [HttpPost("scan")]
+        [RequestSizeLimit(ImageFileValidator.MaxRequestBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = ImageFileValidator.MaxRequestBytes)]
         public async Task<IActionResult> ScanImage(IFormFile imageRequest)
         {
-            if (imageRequest == null || imageRequest.Length == 0)
+            var error = await ImageFileValidator.ValidateAsync(imageRequest);
+            if (error is not null)
             {
-                return BadRequest(new { message = "Invalid image file." });
+                return BadRequest(new { message = error });
             }
             var result = await _visionService.RecognizeImageAsync(imageRequest);
             return Ok(new { message = "Image scan successfully.", data = result });
