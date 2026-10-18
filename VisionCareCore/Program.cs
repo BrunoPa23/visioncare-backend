@@ -253,3 +253,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+// Expone Program para los tests de integracion con WebApplicationFactory
+public partial class Program { }
