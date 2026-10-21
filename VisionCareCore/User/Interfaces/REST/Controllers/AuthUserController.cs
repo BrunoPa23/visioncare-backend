@@ -15,7 +15,10 @@ namespace VisionCareCore.User.Interfaces.REST.Controllers;
 [ApiController]
 [Route("vc/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-public class AuthUserController(IAuthUserQueryService authUserQueryService, IAuthUserCommandService userCommandService) : ControllerBase
+public class AuthUserController(
+    IAuthUserQueryService authUserQueryService,
+    IAuthUserCommandService userCommandService,
+    ILogger<AuthUserController> logger) : ControllerBase
 {
     /**
      * <summary>
@@ -46,11 +49,11 @@ public class AuthUserController(IAuthUserQueryService authUserQueryService, IAut
     {
         if (!HttpContext.User.Identity.IsAuthenticated)
         {
-            Console.WriteLine("❌ Usuario no autenticado.");
+            logger.LogWarning("Consulta de perfil sin usuario autenticado");
             return Unauthorized(new { message = "Usuario no autenticado" });
         }
 
-        Console.WriteLine("✅ Usuario autenticado correctamente.");
+        logger.LogDebug("Usuario autenticado consultando su perfil");
 
         var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
                           HttpContext.User.FindFirst("sub")?.Value;  
