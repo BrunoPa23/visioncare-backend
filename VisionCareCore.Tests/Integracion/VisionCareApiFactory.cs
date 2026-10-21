@@ -26,6 +26,12 @@ public class VisionCareApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("TokenSettings:Issuer", "visioncare-tests");
         builder.UseSetting("TokenSettings:Audience", "visioncare-tests");
 
+        // Valores falsos para pasar la validacion al arrancar; ningun test llama a Azure ni a OpenAI
+        builder.UseSetting("AzureVision:Endpoint", "https://vision.example.test/");
+        builder.UseSetting("AzureVision:Key", "clave-falsa");
+        builder.UseSetting("OpenAI:ApiKey", "clave-falsa");
+        builder.UseSetting("OpenAI:AssistantId", "asistente-falso");
+
         builder.ConfigureServices(services =>
         {
             var registroSqlServer = services.Single(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));

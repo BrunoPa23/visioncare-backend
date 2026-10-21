@@ -206,12 +206,19 @@ builder.Services.AddScoped<IMedicineTimeCommandService, MedicineTimeCommandServi
 // Query Service de MedicineTime
 builder.Services.AddScoped<IMedicineTimeQueryService, MedicineTimeQueryService>();
 
-builder.Services.AddOptions<OpenAIOptions>().Bind(builder.Configuration.GetSection(OpenAIOptions.Seccion));
+builder.Services.AddOptions<OpenAIOptions>()
+    .Bind(builder.Configuration.GetSection(OpenAIOptions.Seccion))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 builder.Services.AddScoped<IGptClient, GptClient>();
 builder.Services.AddScoped<IGptService, GptCommandService>();
 
 builder.Services.AddScoped<IVisionService, VisionCommandService>();
-builder.Services.AddOptions<AzureVisionOptions>().Bind(builder.Configuration.GetSection(AzureVisionOptions.Seccion));
+// Sin endpoint o claves validas la API no arranca, en lugar de fallar en la primera peticion
+builder.Services.AddOptions<AzureVisionOptions>()
+    .Bind(builder.Configuration.GetSection(AzureVisionOptions.Seccion))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 builder.Services.AddScoped<IVisionClient, VisionClient>();
 
 var app = builder.Build();
