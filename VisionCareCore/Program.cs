@@ -1,7 +1,5 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -92,7 +90,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             errorNumbersToAdd: null                   
         )
     )
-    .LogTo(Console.WriteLine, LogLevel.Information)
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment());
 });
@@ -216,15 +213,6 @@ builder.Services.AddScoped<IVisionService, VisionCommandService>();
 builder.Services.AddScoped<IVisionClient, VisionClient>();
 
 var app = builder.Build();
-
-// Log Server Addresses
-var serverAddresses = app.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>();
-
-
-foreach (var address in serverAddresses.Addresses)
-{
-    Console.WriteLine($"Listening on {address}");
-}
 
 // Ensure Database is Created
 using (var scope = app.Services.CreateScope())
