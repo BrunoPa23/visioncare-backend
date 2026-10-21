@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
 
 namespace VisionCareCore.Tests.Integracion;
@@ -40,6 +41,15 @@ public class VisionCareApiFactory : WebApplicationFactory<Program>
             _conexion.Open();
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(_conexion));
         });
+    }
+
+    // Las migraciones son de SQL Server; en SQLite el esquema se crea desde el modelo
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        var host = base.CreateHost(builder);
+        using var scope = host.Services.CreateScope();
+        scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
+        return host;
     }
 
     protected override void Dispose(bool disposing)
