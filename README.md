@@ -84,14 +84,16 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "<cadena de conexi
 dotnet user-secrets set "TokenSettings:Secret" "<clave de al menos 32 caracteres>"
 ```
 
-2. Define las claves de los servicios externos como variables de entorno:
+2. Configura las claves de los servicios externos con user-secrets o variables de entorno (en variables de entorno, `:` se escribe `__`):
 
-| Variable | Uso |
-|---|---|
-| APPSETTING_Vision_Endpoint | Endpoint de Azure AI Vision |
-| APPSETTING_Vision_Key | Clave de Azure AI Vision |
-| APPSETTING_OpenAI_Key | Clave de la API de OpenAI |
-| APPSETTING_Assistant_Key | Id del asistente de OpenAI |
+| Clave de configuracion | Variable de entorno | Uso |
+|---|---|---|
+| AzureVision:Endpoint | AzureVision__Endpoint | Endpoint de Azure AI Vision |
+| AzureVision:Key | AzureVision__Key | Clave de Azure AI Vision |
+| OpenAI:ApiKey | OpenAI__ApiKey | Clave de la API de OpenAI |
+| OpenAI:AssistantId | OpenAI__AssistantId | Id del asistente de OpenAI |
+
+La API valida estas claves al arrancar: si falta alguna o el endpoint no es una URL valida, no inicia y muestra que valor falta.
 
 3. Ajusta los origenes permitidos de CORS en `appsettings.json` (seccion `Cors:OrigenesPermitidos`). En el mismo archivo, `TokenSettings:Issuer` y `TokenSettings:Audience` definen el emisor y la audiencia que la API firma y exige en cada JWT.
 

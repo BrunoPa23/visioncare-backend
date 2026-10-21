@@ -1,6 +1,6 @@
 ﻿using Azure;
 using Azure.AI.Vision.ImageAnalysis;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Runtime.ConstrainedExecution;
 using static System.Net.Mime.MediaTypeNames;
@@ -13,10 +13,10 @@ namespace VisionCareCore.Vision.Infrastructure.ExternalAPIs.Azure
         private readonly string _visionKey;
         private String completedText = string.Empty;
 
-        public VisionClient()
+        public VisionClient(IOptions<AzureVisionOptions> options)
         {
-            _endpoint = Environment.GetEnvironmentVariable("APPSETTING_Vision_Endpoint");
-            _visionKey = Environment.GetEnvironmentVariable("APPSETTING_Vision_Key");
+            _endpoint = options.Value.Endpoint;
+            _visionKey = options.Value.Key;
         }
 
         public async Task<string> RecognizeImageAsync(IFormFile imageRequest)
