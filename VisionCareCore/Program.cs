@@ -206,6 +206,7 @@ builder.Services.AddScoped<IMedicineTimeCommandService, MedicineTimeCommandServi
 // Query Service de MedicineTime
 builder.Services.AddScoped<IMedicineTimeQueryService, MedicineTimeQueryService>();
 
+builder.Services.AddOptions<OpenAIOptions>().Bind(builder.Configuration.GetSection(OpenAIOptions.Seccion));
 builder.Services.AddScoped<IGptClient, GptClient>();
 builder.Services.AddScoped<IGptService, GptCommandService>();
 

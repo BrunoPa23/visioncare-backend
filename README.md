@@ -90,8 +90,8 @@ dotnet user-secrets set "TokenSettings:Secret" "<clave de al menos 32 caracteres
 |---|---|---|
 | AzureVision:Endpoint | AzureVision__Endpoint | Endpoint de Azure AI Vision |
 | AzureVision:Key | AzureVision__Key | Clave de Azure AI Vision |
-| APPSETTING_OpenAI_Key | APPSETTING_OpenAI_Key | Clave de la API de OpenAI |
-| APPSETTING_Assistant_Key | APPSETTING_Assistant_Key | Id del asistente de OpenAI |
+| OpenAI:ApiKey | OpenAI__ApiKey | Clave de la API de OpenAI |
+| OpenAI:AssistantId | OpenAI__AssistantId | Id del asistente de OpenAI |
 
 3. Ajusta los origenes permitidos de CORS en `appsettings.json` (seccion `Cors:OrigenesPermitidos`). En el mismo archivo, `TokenSettings:Issuer` y `TokenSettings:Audience` definen el emisor y la audiencia que la API firma y exige en cada JWT.
 

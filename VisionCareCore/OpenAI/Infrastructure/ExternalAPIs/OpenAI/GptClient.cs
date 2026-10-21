@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Threads;
@@ -12,10 +13,10 @@ namespace VisionCareCore.OpenAI.Infrastructure.ExternalAPIs.OpenAI
         private readonly string _assistantId;
 
 
-        public GptClient()
+        public GptClient(IOptions<OpenAIOptions> options)
         {
-            _api = new OpenAIClient(Environment.GetEnvironmentVariable("APPSETTING_OpenAI_Key"));
-            _assistantId = Environment.GetEnvironmentVariable("APPSETTING_Assistant_Key");
+            _api = new OpenAIClient(options.Value.ApiKey);
+            _assistantId = options.Value.AssistantId;
         }
 
         public async Task<GptResponse> SendRequestAsync(GptRequest request)
