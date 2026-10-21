@@ -103,6 +103,21 @@ La API valida estas claves al arrancar: si falta alguna o el endpoint no es una 
 dotnet run --project VisionCareCore
 ```
 
+## Migraciones de base de datos
+
+El esquema se versiona con migraciones de EF Core (carpeta `Migrations` dentro de `Shared`). La herramienta `dotnet-ef` esta declarada como herramienta local en `.config/dotnet-tools.json`:
+
+```bash
+dotnet tool restore
+dotnet ef migrations add <Nombre> --project VisionCareCore
+dotnet ef database update --project VisionCareCore
+```
+
+- En `Development` la API aplica las migraciones pendientes al arrancar.
+- En otros entornos solo lo hace si `Database:AplicarMigraciones` es `true` (variable `Database__AplicarMigraciones`); si no, se aplican aparte con `dotnet ef database update` o con un script generado por `dotnet ef migrations script --idempotent`.
+- Una base creada antes con `EnsureCreated` no tiene la tabla `__EFMigrationsHistory`: hay que recrearla o registrar a mano la migracion `Inicial` en esa tabla.
+- Los tests de integracion usan SQLite en memoria y crean el esquema desde el modelo, sin migraciones.
+
 ## Equipo
 
 - Bruno Palomino ([@BrunoPa23](https://github.com/BrunoPa23))
