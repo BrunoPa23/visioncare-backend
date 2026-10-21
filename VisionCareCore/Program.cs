@@ -210,6 +210,7 @@ builder.Services.AddScoped<IGptClient, GptClient>();
 builder.Services.AddScoped<IGptService, GptCommandService>();
 
 builder.Services.AddScoped<IVisionService, VisionCommandService>();
+builder.Services.AddOptions<AzureVisionOptions>().Bind(builder.Configuration.GetSection(AzureVisionOptions.Seccion));
 builder.Services.AddScoped<IVisionClient, VisionClient>();
 
 var app = builder.Build();
