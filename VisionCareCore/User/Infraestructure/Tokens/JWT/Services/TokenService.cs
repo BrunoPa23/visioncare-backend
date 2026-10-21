@@ -19,16 +19,19 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
         private readonly TokenSettings _tokenSettings;
         private readonly IAuthUserRefreshTokenRepository _refreshTokenRepository;
         private readonly AppDbContext _context; 
+        private readonly ILogger<TokenService> _logger;
 
         public TokenService(
             IOptions<TokenSettings> tokenSettings,
             IAuthUserRefreshTokenRepository refreshTokenRepository,
-            AppDbContext context
+            AppDbContext context,
+            ILogger<TokenService> logger
             ) 
         {
             _tokenSettings = tokenSettings?.Value ?? throw new ArgumentNullException(nameof(tokenSettings));
             _refreshTokenRepository = refreshTokenRepository ?? throw new ArgumentNullException(nameof(refreshTokenRepository));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger;
         }
 
         /// <summary>
@@ -96,7 +99,7 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en la validación del token: {ex.Message}");
+                _logger.LogWarning(ex, "Token JWT invalido");
                 return (null, null);
             }
         }
@@ -126,19 +129,19 @@ namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
 
             if (storedToken == null)
             {
-                Console.WriteLine(" Refresh token no encontrado.");
+                _logger.LogInformation("Refresh token no encontrado");
                 return null;
             }
 
             if (storedToken.IsRevoked)
             {
-                Console.WriteLine($" El refresh token del usuario {storedToken.UserId} fue revocado.");
+                _logger.LogWarning("Se intento usar un refresh token revocado del usuario {UserId}", storedToken.UserId);
                 return null;
             }
 
             if (storedToken.ExpiryDate < DateTime.UtcNow)
             {
-                Console.WriteLine($" El refresh token del usuario {storedToken.UserId} ha expirado.");
+                _logger.LogInformation("Refresh token expirado del usuario {UserId}", storedToken.UserId);
                 return null;
             }
 
