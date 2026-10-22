@@ -223,12 +223,12 @@ builder.Services.AddScoped<IVisionClient, VisionClient>();
 
 var app = builder.Build();
 
-// Ensure Database is Created
-using (var scope = app.Services.CreateScope())
+// Migraciones al arrancar solo en Development o con Database:AplicarMigraciones=true; en produccion se aplican aparte
+if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("Database:AplicarMigraciones"))
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated();
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
 }
 
 // Configure Middleware Pipeline
