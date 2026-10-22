@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace VisionCareCore.Tests.Integracion;
 
@@ -9,7 +10,7 @@ namespace VisionCareCore.Tests.Integracion;
 /// </summary>
 public static class ClienteAutenticado
 {
-    public static async Task<(HttpClient Cliente, Guid UserId)> CrearAsync(VisionCareApiFactory factory)
+    public static async Task<(HttpClient Cliente, Guid UserId)> CrearAsync(WebApplicationFactory<Program> factory)
     {
         var cliente = factory.CreateClient();
         var email = $"{Guid.NewGuid():N}@test.com";
