@@ -20,6 +20,6 @@ public class MedicineTimeQueryService : IMedicineTimeQueryService
 
     public async Task<MedicineTime?> GetByIdAsync(Guid id)
     {
-        return await _repository.GetByIdAsync(id);
+        return await _repository.FindByIdAsync(id);
     }
 }

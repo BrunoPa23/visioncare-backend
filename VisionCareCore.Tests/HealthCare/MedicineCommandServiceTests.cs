@@ -46,7 +46,7 @@ public class MedicineCommandServiceTests
 
         await _servicio.Handle(new DeleteMedicineCommand(medicamento.Id));
 
-        _repositorio.Received(1).Delete(medicamento);
+        _repositorio.Received(1).Remove(medicamento);
         await _unitOfWork.Received(1).CompleteAsync();
     }
 
@@ -57,7 +57,7 @@ public class MedicineCommandServiceTests
 
         await _servicio.Handle(new DeleteMedicineCommand(Guid.NewGuid()));
 
-        _repositorio.DidNotReceive().Delete(Arg.Any<Medicine>());
+        _repositorio.DidNotReceive().Remove(Arg.Any<Medicine>());
         await _unitOfWork.DidNotReceive().CompleteAsync();
     }
 }

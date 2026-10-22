@@ -38,11 +38,11 @@ namespace VisionCareCore.HealthCare.Application.Internal.CommandServices
 
         public async Task SoftDelete(Guid id)
         {
-            var item = await _repository.GetByIdAsync(id);
+            var item = await _repository.FindByIdAsync(id);
             if (item == null) throw new Exception("MedicineTime not found");
 
             // Lógica de borrado real si ya no usas IsDeleted
-            await _repository.DeleteAsync(item); // <- asegúrate que tu repo tenga este método
+            _repository.Remove(item);
             await _unitOfWork.CompleteAsync();
         }
     }
