@@ -2,7 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VisionCareCore.HealthCare.Application.Internal.CommandServices;
 using VisionCareCore.HealthCare.Application.Internal.QueryServices;
@@ -162,19 +162,10 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    // Microsoft.OpenApi 2: el requisito referencia el esquema por id dentro del documento
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            },
-            Array.Empty<string>()
-        }
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
 

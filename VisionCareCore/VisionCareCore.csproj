@@ -8,10 +8,10 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.2.1" />
         <PackageReference Include="EntityFrameworkCore.CreatedUpdatedDate" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.13" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.13">
           <PrivateAssets>all</PrivateAssets>
@@ -19,9 +19,9 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.13" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.13" />
-        <PackageReference Include="OpenAI-DotNet" Version="8.6.4" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.0.0" />
+        <PackageReference Include="OpenAI-DotNet" Version="8.8.8" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.1" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
         <!-- SqlClient trae Pkcs 9.0.11 con vulnerabilidades conocidas; se fija una version corregida -->
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
