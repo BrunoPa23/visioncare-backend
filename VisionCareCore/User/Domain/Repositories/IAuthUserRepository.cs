@@ -13,7 +13,6 @@ public interface IAuthUserRepository : IBaseRepository<AuthUser>
      * <returns>The user</returns>
      */
     Task<AuthUser?> FindByEmailAsync(string email);
-    Task<AuthUser?> FindByIdAsync(Guid? id);
 
     Task<AuthUser?> FindByRefreshTokenAsync(string refreshToken);
 
