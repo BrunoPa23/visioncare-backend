@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VisionCareCore.HealthCare.Domain.Model.Entities;
 using VisionCareCore.HealthCare.Domain.Repositories;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 namespace VisionCareCore.HealthCare.Infrastructure.Persistence.EFC.Repositories;
 

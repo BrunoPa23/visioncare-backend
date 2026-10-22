@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Model.Queries;
 using VisionCareCore.User.Domain.Services;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Extensions;
 using VisionCareCore.User.Interfaces.REST.Transform;
 
 namespace VisionCareCore.User.Interfaces.REST.Controllers;

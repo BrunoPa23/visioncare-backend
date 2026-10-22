@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.Vision.Domain.Services;
 using VisionCareCore.Vision.Interfaces.REST.Validation;
 
