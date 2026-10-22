@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - run: dotnet restore VisionCareCore.sln
       - run: dotnet build VisionCareCore.sln --no-restore -c Release
       - run: dotnet test VisionCareCore.sln --no-build -c Release --verbosity normal
