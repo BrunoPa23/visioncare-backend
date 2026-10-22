@@ -20,7 +20,8 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         await Context.SaveChangesAsync();
     }
 
-    public async Task<TEntity?> FindByIdAsync(int id)
+    // Todas las entidades usan Guid como clave primaria
+    public async Task<TEntity?> FindByIdAsync(Guid id)
     {
         return await Context.Set<TEntity>().FindAsync(id);
     }
@@ -41,7 +42,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
     {
         Context.Set<TEntity>().Remove(entity);
     }
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var entity = await FindByIdAsync(id);
         if (entity == null) return;
