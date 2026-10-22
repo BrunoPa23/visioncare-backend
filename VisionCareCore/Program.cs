@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -99,6 +100,10 @@ builder.Services.AddControllers(options =>
 {
         options.Conventions.Add(new KebabCaseRouteNamingConvention());
 });
+
+// Health check de la API con verificacion de conexion a la base de datos
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>("base-de-datos");
 
 // Errores no controlados: se registran en el log y el cliente recibe ProblemDetails sin detalles internos
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -240,6 +245,11 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+// Publico para que Docker o un balanceador lo consulten sin token; responde 503 si la base no conecta
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = HealthCheckResponseWriter.EscribirAsync
+}).AllowAnonymous();
 app.Run();
 
 // Expone Program para los tests de integracion con WebApplicationFactory
