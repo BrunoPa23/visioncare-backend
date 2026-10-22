@@ -138,6 +138,18 @@ La imagen `mcr.microsoft.com/mssql/server` solo existe para x64: en equipos ARM6
 { "status": "Healthy", "duracionMs": 12.3, "checks": [ { "nombre": "base-de-datos", "status": "Healthy", "duracionMs": 11.8 } ] }
 ```
 
+## Rate limiting
+
+La API usa el middleware nativo de ASP.NET Core con ventana fija y sin cola:
+
+| Politica | Endpoints | Particion | Limite por defecto |
+|---|---|---|---|
+| vision | `vision/scan`, `vision/recognize-image` | usuario autenticado | 10 por minuto |
+| gpt | `gpt/test`, `gpt/test-connection` | usuario autenticado | 20 por minuto |
+| sign-in | `authentication/sign-in` | IP | 5 por minuto |
+
+Al superar el limite la API responde 429 con ProblemDetails y la cabecera `Retry-After`. Los limites se cambian en la seccion `RateLimiting` de `appsettings.json` o con variables como `RateLimiting__SignIn__PermitLimit` y `RateLimiting__SignIn__WindowSeconds`; si un valor es 0 o negativo la API no arranca. Detras de un proxy hay que configurar `ForwardedHeaders` para que la IP sea la del cliente.
+
 ## Migraciones de base de datos
 
 El esquema se versiona con migraciones de EF Core (carpeta `Migrations` dentro de `Shared`). La herramienta `dotnet-ef` esta declarada como herramienta local en `.config/dotnet-tools.json`:

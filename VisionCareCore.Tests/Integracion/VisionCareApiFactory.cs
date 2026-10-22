@@ -32,8 +32,14 @@ public class VisionCareApiFactory : WebApplicationFactory<Program>
         // Valores falsos para pasar la validacion al arrancar; ningun test llama a Azure ni a OpenAI
         builder.UseSetting("AzureVision:Endpoint", "https://vision.example.test/");
         builder.UseSetting("AzureVision:Key", "clave-falsa");
-        builder.UseSetting("OpenAI:ApiKey", "clave-falsa");
+        // OpenAI-DotNet exige el prefijo sk- al crear el cliente (sin salir a la red)
+        builder.UseSetting("OpenAI:ApiKey", "sk-clave-falsa-solo-tests");
         builder.UseSetting("OpenAI:AssistantId", "asistente-falso");
+
+        // Limites altos para que los tests que inician muchas sesiones no reciban 429
+        builder.UseSetting("RateLimiting:Vision:PermitLimit", "1000");
+        builder.UseSetting("RateLimiting:Gpt:PermitLimit", "1000");
+        builder.UseSetting("RateLimiting:SignIn:PermitLimit", "1000");
 
         builder.ConfigureServices(services =>
         {

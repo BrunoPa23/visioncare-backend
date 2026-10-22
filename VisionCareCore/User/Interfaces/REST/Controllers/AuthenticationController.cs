@@ -1,6 +1,8 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.User.Application.Internal.OutboundServices;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Model.Commands;
@@ -22,6 +24,7 @@ public class AuthenticationController(
 {
     [HttpPost("sign-in")]
     [AllowAnonymous]
+    [EnableRateLimiting(RateLimitPolicies.SignIn)]
     public async Task<IActionResult> SignIn([FromBody] SignInResource signInResource)
     {
         var user = await authUserRepository.FindByEmailAsync(signInResource.Email);

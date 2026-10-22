@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
 using VisionCareCore.OpenAI.Domain.Services;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.OpenAI.Interfaces.REST.Resources;
 
 namespace VisionCareCore.OpenAI.Interfaces.REST.Controllers
@@ -9,6 +11,7 @@ namespace VisionCareCore.OpenAI.Interfaces.REST.Controllers
 
     [Authorize]
     [ApiController]
+    [EnableRateLimiting(RateLimitPolicies.Gpt)]
     [Route("vc/v1/gpt")]
     [Produces(MediaTypeNames.Application.Json)]
     public class GptController : ControllerBase

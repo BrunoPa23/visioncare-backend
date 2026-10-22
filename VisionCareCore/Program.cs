@@ -15,6 +15,7 @@ using VisionCareCore.OpenAI.Domain.Services;
 using VisionCareCore.OpenAI.Infrastructure.ExternalAPIs.OpenAI;
 using VisionCareCore.Shared.Domain.Repositories;
 using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
 using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
 using VisionCareCore.User.Application.Internal.CommandServices;
@@ -104,6 +105,9 @@ builder.Services.AddControllers(options =>
 // Health check de la API con verificacion de conexion a la base de datos
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AppDbContext>("base-de-datos");
+
+// Rate limiting en vision, GPT y sign-in; limites en la seccion RateLimiting
+builder.Services.AddVisionCareRateLimiting(builder.Configuration);
 
 // Errores no controlados: se registran en el log y el cliente recibe ProblemDetails sin detalles internos
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -244,6 +248,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+// Despues de la autenticacion para limitar por usuario
+app.UseRateLimiter();
 app.MapControllers();
 // Publico para que Docker o un balanceador lo consulten sin token; responde 503 si la base no conecta
 app.MapHealthChecks("/health", new HealthCheckOptions

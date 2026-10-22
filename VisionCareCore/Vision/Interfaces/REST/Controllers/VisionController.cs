@@ -1,7 +1,9 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net.Mime;
+using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.Vision.Domain.Services;
 using VisionCareCore.Vision.Interfaces.REST.Validation;
 
@@ -9,6 +11,7 @@ namespace VisionCareCore.Vision.Interfaces.REST.Controllers
 {
     [Authorize]
     [ApiController]
+    [EnableRateLimiting(RateLimitPolicies.Vision)]
     [Route("vc/v1/vision")]
     [Produces(MediaTypeNames.Application.Json)]
 
