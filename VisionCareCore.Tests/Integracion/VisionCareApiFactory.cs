@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
 
@@ -35,8 +37,9 @@ public class VisionCareApiFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
-            var registroSqlServer = services.Single(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            services.Remove(registroSqlServer);
+            // Desde EF Core 9 la configuracion del proveedor tambien se registra aparte
+            services.RemoveAll<DbContextOptions<AppDbContext>>();
+            services.RemoveAll<IDbContextOptionsConfiguration<AppDbContext>>();
 
             _conexion.Open();
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(_conexion));
