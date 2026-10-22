@@ -65,15 +65,15 @@ La documentacion interactiva esta disponible en Swagger al ejecutar la API.
 
 ## Stack
 
-- .NET 8, ASP.NET Core Web API
-- Entity Framework Core 8 con SQL Server
+- .NET 10, ASP.NET Core Web API
+- Entity Framework Core 10 con SQL Server
 - JWT Bearer y BCrypt.Net
 - Azure AI Vision (Image Analysis) y OpenAI
 - Swagger (Swashbuckle)
 
 ## Como ejecutarlo
 
-Requisitos: .NET 8 SDK (o superior) y una instancia de SQL Server.
+Requisitos: .NET 10 SDK y una instancia de SQL Server.
 
 1. Configura la base de datos y el secreto JWT con user-secrets:
 
