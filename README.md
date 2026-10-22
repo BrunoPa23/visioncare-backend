@@ -34,6 +34,54 @@ VisionCareCore/
 | Infrastructure | EF Core sobre SQL Server, clientes de APIs externas, hashing y tokens |
 | Interfaces | Controllers REST, recursos y assemblers; ACL entre contextos |
 
+### Diagrama de arquitectura
+
+Bounded contexts, servicios externos y base de datos. Cada peticion pasa por el pipeline de middleware antes de llegar al controller de su contexto:
+
+```mermaid
+flowchart LR
+    movil["App movil Flutter<br/>(visioncare-mobile)"]
+
+    subgraph api["VisionCareCore: ASP.NET Core, .NET 10"]
+        direction TB
+        pipeline["Pipeline: manejo de errores, CORS,<br/>JWT, autorizacion y rate limiting"]
+        user["User<br/>registro, sesion, JWT y BCrypt"]
+        healthcare["HealthCare<br/>medicamentos y horarios"]
+        vision["Vision<br/>OCR de etiquetas"]
+        openai["OpenAI<br/>asistente de interpretacion"]
+        shared["Shared<br/>AppDbContext, repositorio base,<br/>Unit of Work y migraciones"]
+        health["GET /health"]
+
+        pipeline --> user
+        pipeline --> healthcare
+        pipeline --> vision
+        pipeline --> openai
+        vision -- "IGptClient" --> openai
+        user --> shared
+        healthcare --> shared
+        health --> shared
+    end
+
+    movil -- "HTTPS y JWT" --> pipeline
+    shared -- "EF Core 10" --> sql[("SQL Server")]
+    vision -- "Image Analysis" --> azure["Azure AI Vision"]
+    openai -- "Assistants API" --> oai["OpenAI"]
+```
+
+Capas dentro de cada contexto (las dependencias apuntan hacia el dominio):
+
+```mermaid
+flowchart TB
+    interfaces["Interfaces<br/>controllers REST, recursos, assemblers y ACL"]
+    application["Application<br/>command services y query services"]
+    domain["Domain<br/>agregados, comandos, queries e interfaces de repositorios"]
+    infrastructure["Infrastructure<br/>repositorios EF Core, clientes de Azure y OpenAI, BCrypt y JWT"]
+
+    interfaces --> application
+    application --> domain
+    infrastructure -. "implementa" .-> domain
+```
+
 ## Endpoints
 
 | Metodo | Ruta | Descripcion |
