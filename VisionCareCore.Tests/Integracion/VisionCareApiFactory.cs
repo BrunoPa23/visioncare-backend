@@ -35,6 +35,11 @@ public class VisionCareApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("OpenAI:ApiKey", "clave-falsa");
         builder.UseSetting("OpenAI:AssistantId", "asistente-falso");
 
+        // Limites altos para que los tests que inician muchas sesiones no reciban 429
+        builder.UseSetting("RateLimiting:Vision:PermitLimit", "1000");
+        builder.UseSetting("RateLimiting:Gpt:PermitLimit", "1000");
+        builder.UseSetting("RateLimiting:SignIn:PermitLimit", "1000");
+
         builder.ConfigureServices(services =>
         {
             // Desde EF Core 9 la configuracion del proveedor tambien se registra aparte
