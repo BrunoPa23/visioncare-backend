@@ -13,6 +13,10 @@ VisionCare ayuda a las personas a gestionar sus medicamentos: reconoce el texto 
 - Reconocimiento de texto en fotos de medicamentos con Azure AI Vision (OCR)
 - Interpretacion del texto reconocido con un asistente de OpenAI
 - Gestion de medicamentos por usuario y de sus horarios de toma
+- Rate limiting en escaneo, asistente e inicio de sesion (429 con ProblemDetails)
+- Health check en `/health` con verificacion de la base de datos
+- Esquema versionado con migraciones de EF Core
+- Arranque completo (API y SQL Server) con docker-compose
 
 ## Arquitectura
 
@@ -24,8 +28,11 @@ VisionCareCore/
 ├── HealthCare/   Medicamentos y horarios de toma
 ├── Vision/       Reconocimiento de imagenes con Azure AI Vision
 ├── OpenAI/       Integracion con el asistente de OpenAI
-└── Shared/       AppDbContext, repositorio base, Unit of Work y convenciones de EF Core
+└── Shared/       AppDbContext, repositorio base con Guid, Unit of Work, migraciones,
+                  manejo de errores, health checks y rate limiting
 ```
+
+Cada contexto separa sus capas en carpetas `Domain`, `Application`, `Infrastructure` e `Interfaces`.
 
 | Capa | Responsabilidad |
 |---|---|
@@ -33,6 +40,54 @@ VisionCareCore/
 | Application | Command services y query services (lecturas y escrituras separadas) |
 | Infrastructure | EF Core sobre SQL Server, clientes de APIs externas, hashing y tokens |
 | Interfaces | Controllers REST, recursos y assemblers; ACL entre contextos |
+
+### Diagrama de arquitectura
+
+Bounded contexts, servicios externos y base de datos. Cada peticion pasa por el pipeline de middleware antes de llegar al controller de su contexto:
+
+```mermaid
+flowchart LR
+    movil["App movil Flutter<br/>(visioncare-mobile)"]
+
+    subgraph api["VisionCareCore: ASP.NET Core, .NET 10"]
+        direction TB
+        pipeline["Pipeline: manejo de errores, CORS,<br/>JWT, autorizacion y rate limiting"]
+        user["User<br/>registro, sesion, JWT y BCrypt"]
+        healthcare["HealthCare<br/>medicamentos y horarios"]
+        vision["Vision<br/>OCR de etiquetas"]
+        openai["OpenAI<br/>asistente de interpretacion"]
+        shared["Shared<br/>AppDbContext, repositorio base,<br/>Unit of Work y migraciones"]
+        health["GET /health"]
+
+        pipeline --> user
+        pipeline --> healthcare
+        pipeline --> vision
+        pipeline --> openai
+        vision -- "IGptClient" --> openai
+        user --> shared
+        healthcare --> shared
+        health --> shared
+    end
+
+    movil -- "HTTPS y JWT" --> pipeline
+    shared -- "EF Core 10" --> sql[("SQL Server")]
+    vision -- "Image Analysis" --> azure["Azure AI Vision"]
+    openai -- "Assistants API" --> oai["OpenAI"]
+```
+
+Capas dentro de cada contexto (las dependencias apuntan hacia el dominio):
+
+```mermaid
+flowchart TB
+    interfaces["Interfaces<br/>controllers REST, recursos, assemblers y ACL"]
+    application["Application<br/>command services y query services"]
+    domain["Domain<br/>agregados, comandos, queries e interfaces de repositorios"]
+    infrastructure["Infrastructure<br/>repositorios EF Core, clientes de Azure y OpenAI, BCrypt y JWT"]
+
+    interfaces --> application
+    application --> domain
+    infrastructure -. "implementa" .-> domain
+```
 
 ## Endpoints
 
@@ -56,10 +111,11 @@ VisionCareCore/
 | GET | /api/medicine-time/by-medicine/{medicineId} | Horarios de un medicamento |
 | GET | /api/medicine-time/{id} | Horario por id |
 | DELETE | /api/medicine-time/{id} | Elimina un horario |
+| GET | /health | Estado de la API y de la base de datos |
 
-Todos los endpoints requieren un JWT valido, enviado en el header `Authorization: Bearer <token>` o en la cookie `AuthToken`, excepto `sign-up`, `sign-in` y `refresh-token`. Sin token la API responde 401.
+Todos los endpoints requieren un JWT valido, enviado en el header `Authorization: Bearer <token>` o en la cookie `AuthToken`, excepto `sign-up`, `sign-in`, `refresh-token` y `/health`. Sin token la API responde 401.
 
-Los errores no controlados responden 500 con un cuerpo ProblemDetails (`application/problem+json`) que solo incluye un titulo generico y el `traceId`; el detalle de la excepcion queda en el log del servidor.
+Los errores no controlados responden 500 con un cuerpo ProblemDetails (`application/problem+json`) que solo incluye un titulo generico y el `traceId`; el detalle de la excepcion queda en el log del servidor. Al superar un limite de peticiones la respuesta es 429, tambien con ProblemDetails (ver [Rate limiting](#rate-limiting)).
 
 La documentacion interactiva esta disponible en Swagger al ejecutar la API.
 
@@ -69,7 +125,11 @@ La documentacion interactiva esta disponible en Swagger al ejecutar la API.
 - Entity Framework Core 10 con SQL Server
 - JWT Bearer y BCrypt.Net
 - Azure AI Vision (Image Analysis) y OpenAI
-- Swagger (Swashbuckle)
+- Swagger (Swashbuckle 10)
+- Rate limiting nativo de ASP.NET Core y health checks con EF Core
+- Docker (imagen multi-stage) y docker-compose con SQL Server 2022
+- xUnit, NSubstitute y WebApplicationFactory con SQLite en memoria
+- GitHub Actions: build, tests y prueba de la imagen con docker-compose
 
 ## Como ejecutarlo
 
@@ -97,7 +157,7 @@ La API valida estas claves al arrancar: si falta alguna o el endpoint no es una 
 
 3. Ajusta los origenes permitidos de CORS en `appsettings.json` (seccion `Cors:OrigenesPermitidos`). En el mismo archivo, `TokenSettings:Issuer` y `TokenSettings:Audience` definen el emisor y la audiencia que la API firma y exige en cada JWT.
 
-4. Ejecuta la API y abre Swagger en la URL que muestra la consola:
+4. Ejecuta la API y abre Swagger en la URL que muestra la consola. En `Development` la API aplica las migraciones pendientes al arrancar (ver [Migraciones](#migraciones-de-base-de-datos)):
 
 ```bash
 dotnet run --project VisionCareCore
@@ -164,6 +224,18 @@ dotnet ef database update --project VisionCareCore
 - En otros entornos solo lo hace si `Database:AplicarMigraciones` es `true` (variable `Database__AplicarMigraciones`); si no, se aplican aparte con `dotnet ef database update` o con un script generado por `dotnet ef migrations script --idempotent`.
 - Una base creada antes con `EnsureCreated` no tiene la tabla `__EFMigrationsHistory`: hay que recrearla o registrar a mano la migracion `Inicial` en esa tabla.
 - Los tests de integracion usan SQLite en memoria y crean el esquema desde el modelo, sin migraciones.
+
+## Tests
+
+```bash
+dotnet test VisionCareCore.sln
+```
+
+- Unitarios de los servicios de medicamentos y horarios con NSubstitute.
+- Integracion con `WebApplicationFactory`: la API completa sobre SQLite en memoria (esquema creado desde el modelo) y claves falsas. Cubren autenticacion, propiedad de recursos, validacion de configuracion al arrancar, `/health`, las respuestas 429 y el repositorio base.
+- Ningun test llama a Azure ni a OpenAI.
+
+El workflow de CI (`.github/workflows/ci.yml`) compila y corre los tests con .NET 10 y, en un segundo job, construye la imagen, levanta el docker-compose y verifica `/health`.
 
 ## Equipo
 
