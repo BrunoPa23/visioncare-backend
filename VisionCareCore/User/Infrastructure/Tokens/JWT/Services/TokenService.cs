@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
 using VisionCareCore.User.Application.Internal.OutboundServices;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Repositories;

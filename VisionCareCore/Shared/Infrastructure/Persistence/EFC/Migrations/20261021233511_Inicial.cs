@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Migrations
+namespace VisionCareCore.Shared.Infrastructure.Persistence.EFC.Migrations
 {
     /// <inheritdoc />
     public partial class Inicial : Migration

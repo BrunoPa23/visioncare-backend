@@ -1,4 +1,4 @@
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.RateLimiting;
 
 /// <summary>
 /// Nombres de las politicas de rate limiting usadas en [EnableRateLimiting].

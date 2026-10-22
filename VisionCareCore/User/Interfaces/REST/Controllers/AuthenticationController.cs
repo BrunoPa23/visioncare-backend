@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.RateLimiting;
 using VisionCareCore.User.Application.Internal.OutboundServices;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Model.Commands;

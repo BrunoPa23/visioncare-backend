@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.Extensions;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration;
 
 public class KebabCaseRouteNamingConvention : IControllerModelConvention
 {

@@ -3,9 +3,9 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Extensions;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.RateLimiting;
 
 public static class RateLimitingExtensions
 {

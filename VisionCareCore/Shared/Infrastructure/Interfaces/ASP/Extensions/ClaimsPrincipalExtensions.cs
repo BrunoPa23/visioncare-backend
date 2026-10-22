@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Extensions;
 
 /// <summary>
 /// Lee el id del usuario autenticado desde los claims del token JWT.

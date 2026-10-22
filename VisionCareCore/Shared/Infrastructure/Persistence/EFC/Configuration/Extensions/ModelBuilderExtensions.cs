@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration.Extensions;
+namespace VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 public static class ModelBuilderExtensions
 {

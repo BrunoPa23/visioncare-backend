@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.Extensions;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 
 public static partial class StringExtentions
 {

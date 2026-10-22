@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration;
 
 /// <summary>
 /// Respuesta JSON de /health con el estado general y el de cada verificacion.

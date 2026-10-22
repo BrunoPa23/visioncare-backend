@@ -7,7 +7,7 @@ using VisionCareCore.HealthCare.Domain.Queries;
 using VisionCareCore.HealthCare.Domain.Services;
 using VisionCareCore.HealthCare.Interfaces.Resources;
 using VisionCareCore.HealthCare.Interfaces.Transform;
-using VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Extensions;
+using VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Extensions;
 
 namespace VisionCareCore.HealthCare.Interfaces.Controllers
 {

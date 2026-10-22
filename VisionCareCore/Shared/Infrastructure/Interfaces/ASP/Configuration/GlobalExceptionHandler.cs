@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration;
 
 /// <summary>
 /// Logs any unhandled exception and answers with a generic ProblemDetails (500).

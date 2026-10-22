@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Repositories;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Repositories;
 

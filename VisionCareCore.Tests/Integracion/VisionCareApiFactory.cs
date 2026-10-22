@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 namespace VisionCareCore.Tests.Integracion;
 

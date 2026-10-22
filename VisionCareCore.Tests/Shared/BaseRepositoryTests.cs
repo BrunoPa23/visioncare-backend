@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using VisionCareCore.HealthCare.Domain.Model.Aggregates;
 using VisionCareCore.HealthCare.Infrastructure.Persistence.EFC.Repositories;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 namespace VisionCareCore.Tests.Shared;
 

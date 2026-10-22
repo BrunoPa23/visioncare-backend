@@ -7,7 +7,7 @@ using VisionCareCore.HealthCare.Domain.Model.ValueObjects;
 using VisionCareCore.User.Domain.Model.Aggregates;
 
 
-namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration
+namespace VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration
 {
     public class AppDbContext : DbContext
     {

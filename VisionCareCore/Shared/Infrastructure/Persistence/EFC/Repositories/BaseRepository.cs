@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VisionCareCore.Shared.Domain.Repositories;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
+namespace VisionCareCore.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {

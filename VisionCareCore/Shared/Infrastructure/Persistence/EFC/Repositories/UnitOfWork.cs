@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using VisionCareCore.Shared.Domain.Repositories;
-using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
+using VisionCareCore.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-namespace VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
+namespace VisionCareCore.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {

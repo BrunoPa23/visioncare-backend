@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VisionCareCore.Shared.Infraestructure.Interfaces.ASP.Configuration.RateLimiting;
+namespace VisionCareCore.Shared.Infrastructure.Interfaces.ASP.Configuration.RateLimiting;
 
 /// <summary>
 /// Limites de peticiones por ventana fija, configurables en la seccion RateLimiting.
