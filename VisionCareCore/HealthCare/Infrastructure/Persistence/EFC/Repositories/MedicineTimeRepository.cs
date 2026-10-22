@@ -16,18 +16,5 @@ public class MedicineTimeRepository : BaseRepository<MedicineTime>, IMedicineTim
             .Where(mt => mt.MedicineId == medicineId)
             .ToListAsync();
     }
-
-    public async Task<MedicineTime?> GetByIdAsync(Guid id)
-    {
-        return await Context.Set<MedicineTime>()
-            .FirstOrDefaultAsync(mt => mt.Id == id);
-    }
-
-    // ✅ Nuevo método real de eliminación
-    public Task DeleteAsync(MedicineTime entity)
-    {
-        Context.Set<MedicineTime>().Remove(entity);
-        return Task.CompletedTask;
-    }
 }
 

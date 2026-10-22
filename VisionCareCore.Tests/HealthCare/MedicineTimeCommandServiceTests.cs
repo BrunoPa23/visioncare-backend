@@ -49,18 +49,18 @@ public class MedicineTimeCommandServiceTests
     public async Task Eliminar_HorarioExistente_LoEliminaYGuarda()
     {
         var horario = new MedicineTime { Id = Guid.NewGuid(), MedicineId = Guid.NewGuid(), Day = "Lunes" };
-        _repositorio.GetByIdAsync(horario.Id).Returns(horario);
+        _repositorio.FindByIdAsync(horario.Id).Returns(horario);
 
         await _servicio.SoftDelete(horario.Id);
 
-        await _repositorio.Received(1).DeleteAsync(horario);
+        _repositorio.Received(1).Remove(horario);
         await _unitOfWork.Received(1).CompleteAsync();
     }
 
     [Fact]
     public async Task Eliminar_HorarioInexistente_LanzaExcepcionSinGuardar()
     {
-        _repositorio.GetByIdAsync(Arg.Any<Guid>()).Returns((MedicineTime?)null);
+        _repositorio.FindByIdAsync(Arg.Any<Guid>()).Returns((MedicineTime?)null);
 
         await Assert.ThrowsAsync<Exception>(() => _servicio.SoftDelete(Guid.NewGuid()));
         await _unitOfWork.DidNotReceive().CompleteAsync();

@@ -44,7 +44,7 @@ public class MedicineCommandService : IMedicineCommandService
         if (medicine == null)
             return;
 
-        _medicineRepository.Delete(medicine);
+        _medicineRepository.Remove(medicine);
         await _unitOfWork.CompleteAsync();
     }
 
