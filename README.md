@@ -103,6 +103,41 @@ La API valida estas claves al arrancar: si falta alguna o el endpoint no es una 
 dotnet run --project VisionCareCore
 ```
 
+## Arranque con docker-compose
+
+Requisito: Docker con Compose v2. Levanta la API y SQL Server 2022 con un solo comando:
+
+```bash
+docker compose up -d --build
+```
+
+- La API queda en `http://localhost:5080` (Swagger en `/swagger`, salud en `/health`) y SQL Server en `localhost:1433`.
+- La API espera a que SQL Server pase su healthcheck (`sqlcmd SELECT 1`) y aplica las migraciones al arrancar (`Database__AplicarMigraciones=true`).
+- Los datos de SQL Server viven en el volumen `sqlserver-data`; `docker compose down -v` lo borra.
+- La imagen de la API es multi-stage: compila con el SDK de .NET 10 y corre sobre `aspnet:10.0` con un usuario sin privilegios.
+
+Todas las variables tienen valores falsos por defecto, suficientes para desarrollo. Para cambiarlas, copia `.env.example` a `.env` (ignorado por git):
+
+| Variable de `.env` | Se pasa a la API como | Uso |
+|---|---|---|
+| MSSQL_SA_PASSWORD | parte de `ConnectionStrings__DefaultConnection` | Contrasena de `sa` en SQL Server |
+| TOKEN_SECRET | `TokenSettings__Secret` | Clave de firma JWT (32 caracteres o mas) |
+| AZURE_VISION_ENDPOINT, AZURE_VISION_KEY | `AzureVision__Endpoint`, `AzureVision__Key` | Azure AI Vision |
+| OPENAI_API_KEY, OPENAI_ASSISTANT_ID | `OpenAI__ApiKey`, `OpenAI__AssistantId` | Asistente de OpenAI |
+| API_PORT, SQLSERVER_PORT | puertos publicados | 5080 y 1433 por defecto |
+
+Con las claves falsas la API arranca y funcionan la autenticacion, los medicamentos y los horarios; el escaneo y el asistente necesitan claves reales (con las falsas responden error).
+
+La imagen `mcr.microsoft.com/mssql/server` solo existe para x64: en equipos ARM64 necesita emulacion (Docker Desktop con Rosetta o QEMU). El workflow de CI construye la imagen, levanta el compose y verifica `/health` en cada PR.
+
+## Health checks
+
+`GET /health` es publico y responde JSON con el estado general y el de cada verificacion (hoy, la conexion a la base de datos con EF Core). Devuelve 200 si todo esta sano y 503 si la base no responde; nunca incluye mensajes de error ni datos de conexion.
+
+```json
+{ "status": "Healthy", "duracionMs": 12.3, "checks": [ { "nombre": "base-de-datos", "status": "Healthy", "duracionMs": 11.8 } ] }
+```
+
 ## Migraciones de base de datos
 
 El esquema se versiona con migraciones de EF Core (carpeta `Migrations` dentro de `Shared`). La herramienta `dotnet-ef` esta declarada como herramienta local en `.config/dotnet-tools.json`:

@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/appsettings.*.local.json
+.git/
+.github/
+.config/
+.env
+.env.*
+VisionCareCore.Tests/
+docker-compose*.yml
+Dockerfile
+*.md
