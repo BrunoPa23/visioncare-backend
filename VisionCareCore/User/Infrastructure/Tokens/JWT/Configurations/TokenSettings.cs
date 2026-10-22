@@ -1,4 +1,4 @@
-﻿namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Configurations;
+﻿namespace VisionCareCore.User.Infrastructure.Tokens.JWT.Configurations;
 
 public class TokenSettings
 {

@@ -1,7 +1,7 @@
 ﻿using VisionCareCore.User.Application.Internal.OutboundServices;
 using BCryptNet = BCrypt.Net.BCrypt;
 
-namespace VisionCareCore.User.Infraestructure.Hashing.BCrypt.Services;
+namespace VisionCareCore.User.Infrastructure.Hashing.BCrypt.Services;
 
 public class HashingService : IHashingService
 {

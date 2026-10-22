@@ -9,10 +9,10 @@ using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Configuration;
 using VisionCareCore.User.Application.Internal.OutboundServices;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Repositories;
-using VisionCareCore.User.Infraestructure.Tokens.JWT.Configurations;
+using VisionCareCore.User.Infrastructure.Tokens.JWT.Configurations;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
-namespace VisionCareCore.User.Infraestructure.Tokens.JWT.Services
+namespace VisionCareCore.User.Infrastructure.Tokens.JWT.Services
 {
     public class TokenService : ITokenService
     {

@@ -4,7 +4,7 @@ using VisionCareCore.Shared.Infraestructure.Persistences.EFC.Repositories;
 using VisionCareCore.User.Domain.Model.Aggregates;
 using VisionCareCore.User.Domain.Repositories;
 
-namespace VisionCareCore.User.Infraestructure.Persistence.EFC.Repositories;
+namespace VisionCareCore.User.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
 /// Repositorio de usuarios; la busqueda por id, el alta y el listado vienen de BaseRepository.
